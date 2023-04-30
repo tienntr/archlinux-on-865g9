@@ -8,7 +8,7 @@ yay -S ttf-ms-win11-auto
 
 ## Fix jagged Calibri and Cambria fonts
 
-Disable embedded bitmaps for these font by creating `/etc/fonts/local.conf` with the following content:
+Disable embedded bitmaps for these fonts by creating `/etc/fonts/local.conf` with the following content:
 
 ```xml
 <?xml version="1.0"?>
