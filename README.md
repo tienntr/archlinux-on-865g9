@@ -4,6 +4,16 @@ Use `archinstall`. You may need to fix Windows EOL in generated `/etc/fstab`.
 
 This note assume you installed KDE on Wayland and use `systemd-boot`.
 
+# Hang at shutdown/reboot
+
+SDDM 0.19 failed to stop during shutdown/reboot on Wayland session. Install
+`sddm-git` to get this fix.
+
+# `systemd-boot` update
+
+Enable `systemd-boot-update.service`. Note that due to the way this service
+work, actually you have to reboot the machine twice to update the bootloader.
+
 # Network
 
 ## Firewall
@@ -36,7 +46,7 @@ DHCP server.
 
 # AUR
 
-Install `git`, `pigz` and `pbzip2 `.
+Install `git`, `pigz` and `pbzip2`.
 
 Edit `/etc/makepkg.conf` to enable parallel `make` and compression:
 
