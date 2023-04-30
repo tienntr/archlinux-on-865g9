@@ -32,7 +32,7 @@ dns=dnsmasq
 ```
 
 Then run `nmcli general reload` as root. NetworkManager runs its own instance
-of `dnsmasq` that listen on `127.0.0.1:53`.
+of `dnsmasq` that listens on `127.0.0.1:53`.
 
 ## Wireless
 
