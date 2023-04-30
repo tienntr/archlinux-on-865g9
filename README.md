@@ -7,7 +7,7 @@ This note assume you installed KDE on Wayland and use `systemd-boot`.
 # Hang at shutdown/reboot
 
 SDDM 0.19 failed to stop during shutdown/reboot on Wayland session. Install
-`sddm-git` to get this fix.
+`sddm-git` to get this fixed.
 
 # `systemd-boot` update
 
