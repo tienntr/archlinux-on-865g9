@@ -27,7 +27,7 @@ Environment variable that should be set only for Wayland session can be set in
 
 Set enviroment variable `MOZ_ENABLE_WAYLAND=1`
 
-### QT app
+### QT apps
 
 Set enviroment variable `QT_QPA_PLATFORM=wayland`. For Qt 6 apps, also install
 `qt6-wayland`.
@@ -252,6 +252,30 @@ GTK_IM_MODULE=fcitx
 QT_IM_MODULE=fcitx
 XMODIFIERS=@im=fcitx
 ```
+
+# Qt and GTK theming
+
+## GTK warning when using Breeze theme
+
+This warning may appear when launching GTK application:
+
+```
+Gtk-WARNING **: <time_stamp>: Theme parsing error: gtk.css:1649:16: '-gtk-icon-size' is not a valid property name
+```
+
+It's pretty benign but may cause distraction in CLI. The reason seems to be
+changes in GTK that made the CSS property in Breeze theme for GTK no longer
+valid.
+
+Several ways to fix this:
+
+* Set `GTK_THEME` enviroment variable to use other theme (e.g. `Adwaita:dark`).
+* Go to System Settings > Appearance > Application Style > Configure GNOME/GTK
+Application Style... and select other theme for GTK apps. To have Adwaita
+theme in the drop-down list you may have to install `gnome-themes-extra`.
+
+Install `adwaita-qt5`, `adwaita-qt6` (and `adwaita-qt4` AUR) if you also want
+to use Adwaita theme for Qt apps to make the look-and-feel uniform.
 
 # Misc
 
