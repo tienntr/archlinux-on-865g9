@@ -121,7 +121,11 @@ Enable and start `bluetooth.service`.
 
 ## AUR
 
-Install `git`, `pigz` and `pbzip2`.
+Install `git`.  Install `yay-bin` or `paru` by cloning and `makepkg -si`.
+
+### Parallel build
+
+Install `pigz` and `pbzip2`.
 
 Edit `/etc/makepkg.conf` to enable parallel `make` and compression:
 
@@ -134,7 +138,17 @@ COMPRESSXZ=(xz -c -z --threads=8 -)
 COMPRESSZST=(zstd -c -z -q --threads=8 -)
 ```
 
-Install `yay-bin` by cloning and `makepkg -si`.
+### Rebuild AUR packages that depend on Python after Python update
+
+```
+yay -S $(pacman -Qoq /usr/lib/python${PREV_VERSION}) --answerclean All
+```
+
+or
+
+```
+yay -S --rebuild --noconfirm $(yay -Qqo /usr/lib/python${PREV_VERSION}/)
+```
 
 ## Enhancements to `pacman`
 
