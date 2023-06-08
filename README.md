@@ -301,4 +301,4 @@ This is defined by keyboard/system firmware:
 
 ## Man pages
 
-Install `man-db`.
+Install `man-db` and `man-pages`.
