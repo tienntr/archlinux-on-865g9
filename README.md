@@ -112,6 +112,7 @@ There are some issue with access point feature in NetworkManager:
 * Can't create WPA3 access point.
 * The network confuse some device and cause connection failure (Nexus 6 running
 LineageOS can connect by Pixel 5a running stock ROM failed to connect).
+* Need to figure out how to make KDE connect work (firewall-related issue?)
 
 # Bluetooth
 
@@ -170,6 +171,11 @@ Install `archlinux-contrib` to get `checkservices` command. It runs `pacdiff`
 to merge `.pacnew` files then checks for processes running with outdated
 libraries and prompts the user if they want them to be restarted.
 
+Add `Server = https://archive.archlinux.org/packages/.all` to the end of
+enabled mirrors. This allows using Arch Linux Archive to get old packages
+and avoid 404 error when you install packages after a long time from the last
+database synchronization.
+
 ## Contribute package statistics
 
 Install `pkgstats`.
@@ -216,11 +222,18 @@ with the following content:
 
 Install `android-tools` and `android-udev`.
 
-# Hardware-accelerated video decoding
+# Multimedia
+
+# Image viewer
+
+Install `gwenview`. Gwenview video playback also work if `phonon-qt5-vlc` is
+installed.
+
+## Hardware-accelerated video decoding
 
 Install `mesa-vdpau`. Add `VDPAU_DRIVER=radeonsi` to `/etc/enviroment`.
 
-## Firefox
+### Firefox
 
 Run Firefox in Wayland mode. Go to `about:config` and set
 `media.ffmpeg.vaapi.enabled` to `true`.
