@@ -197,6 +197,8 @@ You can also rebuild all AUR packages periodically.
 
 ## Enhancements to `pacman`
 
+Uncomment `Color` line in `/etc/pacman.conf` to enable color ouput.
+
 Install `informant` and add your user to `informant` group so `pacman` will
 prevent you from installing new packages without reading all the news.
 
