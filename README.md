@@ -110,7 +110,7 @@ DHCP server.
 There are some issue with access point feature in NetworkManager:
 
 * Can't create WPA3 access point.
-* The network confuse some device and cause connection failure (Nexus 6 running
+* The network confuse some device and cause connection failure (Nexus 6 running of 
 LineageOS can connect by Pixel 5a running stock ROM failed to connect).
 * Need to figure out how to make KDE connect work (firewall-related issue?)
 
@@ -122,7 +122,31 @@ Enable and start `bluetooth.service`.
 
 ## AUR
 
-Install `git`.  Install `yay-bin` or `paru` by cloning and `makepkg -si`.
+Install `git`.  Install `paru-bin` by cloning and `makepkg -si`.
+
+Ideally AUR packages should be built in clean chroot, otherwise build and run issues
+(albeit rare in my experience) may arise. To use this feature, you have to setup
+paru` local repo first. Edit `/etc/pacman.conf`, uncomment the line
+
+```
+CacheDir = /var/cache/pacman/pkg/
+```
+
+and add the following excerpt to the end:
+
+```
+[options]
+CacheDir = /var/lib/repo/aur
+
+[aur]
+SigLevel = PackageOptional DatabaseOptional
+Server = file:///var/lib/repo/aur
+```
+
+The first `CacheDir` option specifies cache directory for official repos and the
+second one specifies cache directory for the local `aur` repo.
+
+Package can be built in clean chroot and installed with `-S --chroot` options.
 
 ### Parallel build
 
@@ -142,13 +166,13 @@ COMPRESSZST=(zstd -c -z -q --threads=8 -)
 ### Rebuild AUR packages that depend on Python after Python update
 
 ```
-yay -S $(pacman -Qoq /usr/lib/python${PREV_VERSION}) --answerclean All
+pacman -Qoq /usr/lib/python${PREV_VERSION}/ | paru -S --rebuild --no-confirm -
 ```
 
 or
 
 ```
-yay -S --rebuild --noconfirm $(yay -Qqo /usr/lib/python${PREV_VERSION}/)
+pacman -Qoq /usr/lib/python${PREV_VERSION} | paru -S --answerclean All -
 ```
 
 ## Enhancements to `pacman`
@@ -184,9 +208,7 @@ Install `pkgstats`.
 
 ## Install MS fonts
 
-```
-yay -S ttf-ms-win11-auto
-```
+Install `ttf-ms-win11-auto` AUR package.
 
 ## Fix jagged Calibri and Cambria fonts
 
