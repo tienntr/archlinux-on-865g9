@@ -4,6 +4,12 @@ Use `archinstall`. May need to fix Windows EOL in generated `/etc/fstab`.
 
 This note assumes you installed KDE on Wayland and use `systemd-boot`.
 
+# Password lockout
+
+By default user will be lockout for 10 minutes after 3 failed login attempts
+in a 15 minute period. Edit `/etc/security/faillock.conf`, increase `deny`
+and decrease `unlock_time` if the default is too restrictive (it is, for me).
+
 # Wayland-related issues
 
 ## Hang at shutdown/reboot
