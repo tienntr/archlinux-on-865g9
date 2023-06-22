@@ -163,7 +163,19 @@ COMPRESSXZ=(xz -c -z --threads=8 -)
 COMPRESSZST=(zstd -c -z -q --threads=8 -)
 ```
 
-### Rebuild AUR packages that depend on Python after Python update
+### Rebuild AUR packages after dependencies update
+
+If dependencies of an AUR package are updated, the packages may need to be rebuilt.
+(Most?) AUR helpers don't do this automatically.
+
+Installed `rebuild-detector`, and run `checkrebuild -v` to know which packages
+should be rebuilt. `rebuild-dectector` also install pacman hook that run the check
+automatically with smaller scan graph. It should be note that the tool may have
+false negative.
+
+To rebuild manually after a known dependenies update, search for the dependents and
+rebuild them. For example, to rebuild all AUR packages that depend on Python after a
+Python update, run:
 
 ```
 pacman -Qoq /usr/lib/python${PREV_VERSION}/ | paru -S --rebuild --no-confirm -
@@ -174,6 +186,8 @@ or
 ```
 pacman -Qoq /usr/lib/python${PREV_VERSION} | paru -S --answerclean All -
 ```
+
+You can also rebuild all AUR packages periodically.
 
 ## Enhancements to `pacman`
 
