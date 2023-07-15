@@ -12,11 +12,6 @@ and decrease `unlock_time` if the default is too restrictive (it is, for me).
 
 # Wayland-related issues
 
-## Hang at shutdown/reboot
-
-SDDM 0.19 failed to stop during shutdown/reboot on Wayland session. Install
-`sddm-git` (this removes `sddm`) to get this fixed.
-
 ## Run apps in Wayland mode
 
 ### About `XDG_CONFIG_HOME`
