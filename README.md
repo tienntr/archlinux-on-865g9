@@ -326,9 +326,6 @@ Several ways to fix this:
 Application Style... and select other theme for GTK apps. To have Adwaita
 theme in the drop-down list you may have to install `gnome-themes-extra`.
 
-Install `adwaita-qt5`, `adwaita-qt6` (and `adwaita-qt4` AUR) if you also want
-to use Adwaita theme for Qt apps to make the look-and-feel uniform.
-
 # Misc
 
 ## Enable REISUB magic SysRq
