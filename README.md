@@ -24,10 +24,6 @@ to `~/.config`.
 Environment variable that should be set only for Wayland session can be set in
 `${XDG_CONFIG_HOME}/environment.d/envvars.conf`
 
-### Firefox
-
-Set enviroment variable `MOZ_ENABLE_WAYLAND=1`
-
 ### QT apps
 
 Set enviroment variable `QT_QPA_PLATFORM=wayland`. For Qt 6 apps, also install
