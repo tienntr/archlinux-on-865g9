@@ -117,8 +117,8 @@ Enable and start `bluetooth.service`.
 Install `git`.  Install `paru-bin` by cloning and `makepkg -si`.
 
 Ideally AUR packages should be built in clean chroot, otherwise build and run issues
-(albeit rare in my experience) may arise. To use this feature, you have to setup
-paru` local repo first. Edit `/etc/pacman.conf`, uncomment the line
+may arise. To use this feature, you have to setup
+`paru` local repo first. Edit `/etc/pacman.conf`, uncomment the line
 
 ```
 CacheDir = /var/cache/pacman/pkg/
@@ -139,6 +139,8 @@ The first `CacheDir` option specifies cache directory for official repos and the
 second one specifies cache directory for the local `aur` repo.
 
 Package can be built in clean chroot and installed with `-S --chroot` options.
+But it's better to enable this as default by uncommenting `Chroot` option in
+`/etc/paru.conf`.
 
 ### Parallel build
 
