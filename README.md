@@ -29,7 +29,7 @@ Environment variable that should be set only for Wayland session can be set in
 Set enviroment variable `QT_QPA_PLATFORM=wayland`. For Qt 6 apps, also install
 `qt6-wayland`.
 
-### Electron apps and `visual-studio-code-bin`
+### Electron apps
 
 Create `${XDG_CONFIG_HOME}/electron-flags.conf` with the following content:
 
@@ -37,12 +37,7 @@ Create `${XDG_CONFIG_HOME}/electron-flags.conf` with the following content:
 --ozone-platform-hint=auto
 ```
 
-`visual-studio-code-bin` uses `code-flags.conf` instead, so make a symlink:
-
-```bash
-cd ${XDG_CONFIG_HOME}  # or ~/.config
-ln -s electron-flags.conf code-flags.conf
-```
+Add `ELECTRON_OZONE_PLATFORM_HINT=auto` to `/etc/environment`.
 
 ## Wayland clipboard
 
@@ -290,14 +285,12 @@ or by pressing any key on the keyboard.
 Disable waking from touchpad (by disabling correspondin I2C device) doesn't
 improve power consumption.
 
-# Vietnamess input method
+# Vietnamese input method
 
 Install `fcitx5-unikey` and `fcitx5-im`. Add to `/etc/enviroment` the following
 lines:
 
 ```
-GTK_IM_MODULE=fcitx
-QT_IM_MODULE=fcitx
 XMODIFIERS=@im=fcitx
 ```
 
