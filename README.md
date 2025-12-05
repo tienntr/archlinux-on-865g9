@@ -258,15 +258,6 @@ installed.
 
 Install `mesa-vdpau`. Add `VDPAU_DRIVER=radeonsi` to `/etc/enviroment`.
 
-### Firefox
-
-Run Firefox in Wayland mode. Go to `about:config` and set
-`media.ffmpeg.vaapi.enabled` to `true`.
-
-**Note**: it seems that using VA-API causes time-out error in `amdgpu` driver
-and session crashes. In that case switch to other virtual TTY and issue a
-reboot commmand, or use REISUB magic SysRq.
-
 # Power management
 
 ## Improve S0 power consumption
