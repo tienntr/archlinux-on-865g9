@@ -324,7 +324,7 @@ theme in the drop-down list you may have to install `gnome-themes-extra`.
 Create file `/etc/sysctl.d/99-enable-sysrq.conf` with the following content:
 
 ```
-kernel.sysrq=224
+kernel.sysrq=244
 ```
 
 PrtScr key and Fn + S can be used as SysRq key.
