@@ -104,7 +104,6 @@ There are some issue with access point feature in NetworkManager:
 * Can't create WPA3 access point.
 * The network confuse some device and cause connection failure (Nexus 6 running of 
 LineageOS can connect by Pixel 5a running stock ROM failed to connect).
-* Need to figure out how to make KDE connect work (firewall-related issue?)
 
 # Bluetooth
 
