@@ -172,13 +172,7 @@ rebuild them. For example, to rebuild all AUR packages that depend on Python aft
 Python update, run:
 
 ```
-pacman -Qoq /usr/lib/python${PREV_VERSION}/ | paru -S --rebuild --no-confirm -
-```
-
-or
-
-```
-pacman -Qoq /usr/lib/python${PREV_VERSION} | paru -S --answerclean All -
+pacman -Qoq /usr/lib/python${PREV_VERSION}/ | paru -S --rebuild --noconfirm -
 ```
 
 You can also rebuild all AUR packages periodically.
