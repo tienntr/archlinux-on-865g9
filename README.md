@@ -254,9 +254,17 @@ Install `android-tools` and `android-udev`.
 Install `gwenview`. Gwenview video playback also work if `phonon-qt5-vlc` is
 installed.
 
-## Hardware-accelerated video decoding
+# Hardware-accelerated video encodin/decoding
 
 Install `mesa-vdpau`. Add `VDPAU_DRIVER=radeonsi` to `/etc/enviroment`.
+
+## Chromium
+
+Create `${XDG_CONFIG_HOME}/chromium-flags.conf` with the following content:
+
+```
+--enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL,AcceleratedVideoEncoder
+```
 
 # Power management
 
