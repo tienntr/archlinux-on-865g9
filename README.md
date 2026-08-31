@@ -16,28 +16,31 @@ and decrease `unlock_time` if the default is too restrictive (it is, for me).
 
 ### About `XDG_CONFIG_HOME`
 
-`${XDG_CONFIG_HOME}` is direcdtory for user-specific configurations, defaulted
+`${XDG_CONFIG_HOME}` is directory for user-specific configurations, defaulted
 to `~/.config`.
-
-### Set environment variables for Wayland session
-
-Environment variable that should be set only for Wayland session can be set in
-`${XDG_CONFIG_HOME}/environment.d/envvars.conf`
 
 ### QT apps
 
-Set enviroment variable `QT_QPA_PLATFORM=wayland`. For Qt 6 apps, also install
-`qt6-wayland`.
+Qt 6 applications use Wayland automatically. No environment variable is
+normally needed.
 
-### Electron apps
+Qt 5 applications run through Xwayland by default. To allow them to run
+natively on Wayland, install `qt5-wayland`. After installing it, Qt 5
+applications should normally select the appropriate backend automatically.
+Do not set `QT_QPA_PLATFORM` globally.
 
-Create `${XDG_CONFIG_HOME}/electron-flags.conf` with the following content:
+To test a particular application on native Wayland, run:
 
 ```
---ozone-platform-hint=auto
+QT_QPA_PLATFORM=wayland application
 ```
 
-Add `ELECTRON_OZONE_PLATFORM_HINT=auto` to `/etc/environment`.
+If the application has Wayland compatibility problems, force it to use
+Xwayland:
+
+```
+QT_QPA_PLATFORM=xcb application
+```
 
 ## Wayland clipboard
 
@@ -46,9 +49,9 @@ Install `wl-clipboard` to use `wl-copy` and `wl-paste`.
 # `systemd-boot` update
 
 Enable `systemd-boot-update.service`. Note that you have to reboot twice to
-actually *use* the new bootloader: `pacman` update the installer and during the
-first reboot (using old bootloader) this service triggers installation of new
-bootloader.
+actually *use* the new bootloader: the systemd package updates the bootloader
+binary under `/usr/lib/systemd/boot/efi`; the service copies it to the ESP on
+the next boot.
 
 # Bash enhancement
 
@@ -69,9 +72,7 @@ to `/etc/bash.bashrc`.
 
 ## Firewall
 
-Install `iptables-nft` (this removes `iptables`) to use nftables and prevent
-conflicts with `iptables`. Install `firewalld`, enable and start
-`firewalld.service`.
+Install `firewalld`, enable and start `firewalld.service`.
 
 ## DNS caching
 
@@ -91,8 +92,10 @@ of `dnsmasq` that listens on `127.0.0.1:53`.
 Install `wireless-regdb` and uncomment correct country in
 `/etc/conf.d/wireless-regdom`.
 
-It seems that the firmware on Qualcomm card self-manages regdomain, so the
-regdomain can't be changed.
+On this laptop, the Qualcomm QCNFA765/WCN6855 is reported by ath11k as a
+self-managed regulatory device. Although Linux sets the global domain to the
+country specified in `wireless-regdom`, the firmware may rejects the request
+and retains US rules. See [WCN6855_notes.md](WCN6855_notes.md) for more information.
 
 ## Sharing Internet via Wi-Fi with NetworkManager
 
@@ -132,11 +135,11 @@ Enable the local repository and clean-chroot build in `/etc/paru.conf`:
 [options]
 LocalRepo = aur
 Chroot
-KeepRepoCache
 ```
 
-`LocalRepo` is required when `Chroot` is enabled. `KeepRepoCache` is optional;
-it retains older AUR package archives for rollback.
+Modern paru can technically build in a chroot without a local repository,
+but the local repository remains the better-supported and more robust workflow
+for interdependent AUR packages.
 
 After this configuration, running plain `paru` builds AUR packages in the clean
 chroot, adds them to the local `[aur]` repository, and installs them through
@@ -154,40 +157,44 @@ MAKEFLAGS="-j8"
 COMPRESSGZ=(pigz -p 8 -c -f -n)
 COMPRESSBZ2=(pbzip2 -p8 -c -f)
 COMPRESSXZ=(xz -c -z --threads=8 -)
-COMPRESSZST=(zstd -c -z -q --threads=8 -)
+COMPRESSZST=(zstd -c -q -T0 -)
 ```
 
-### Rebuild AUR packages after dependencies update
+### Rebuild AUR packages after dependency updates
 
-If dependencies of an AUR package are updated, the packages may need to be rebuilt.
-(Most?) AUR helpers don't do this automatically.
-
-Installed `rebuild-detector`, and run `checkrebuild -v` to know which packages
-should be rebuilt. `rebuild-dectector` also install pacman hook that run the check
-automatically with smaller scan graph. It should be note that the tool may have
-false negative.
-
-To rebuild manually after a known dependenies update, search for the dependents and
-rebuild them. For example, to rebuild all AUR packages that depend on Python after a
-Python update, run:
+AUR packages are not automatically rebuilt when an ABI dependency changes.
+Install `rebuild-detector`; its pacman hook reports many packages that may need
+rebuilding. Run a more complete check manually with:
 
 ```
-pacman -Qoq /usr/lib/python${PREV_VERSION}/ | paru -S --rebuild --noconfirm -
+checkrebuild -v
 ```
 
-You can also rebuild all AUR packages periodically.
+After a Python minor-version transition, find packages that still own files in
+the previous interpreter's directory and force paru to rebuild them:
+
+```
+pacman -Qoq /usr/lib/python${PREV_VERSION}/ | paru -S --rebuild=yes -
+```
+
+Review the package list before using `--noconfirm` in `paru` command.
+This directory-based check does not detect every possible ABI dependency,
+so run `checkrebuild -v` afterward.
 
 ## Enhancements to `pacman`
 
 Uncomment `Color` line in `/etc/pacman.conf` to enable color ouput.
 
-Install `informant` and add your user to `informant` group so `pacman` will
-prevent you from installing new packages without reading all the news.
+Enable `NewsOnUpgrade` in `/etc/paru.conf` to display unread Arch news before
+upgrades performed through paru.
+
+Alternatively, install `informant` if pacman transactions should be blocked
+until unread news has been acknowledged. Using both is generally redundant.
 
 Install `pacman-contrib`. It provides:
 
 * `checkupdates` command: check for updates without the need for root
-priviledge used to sync database.
+privilege used to sync database.
 * `paccache.timer`: enable and start this to discard unused cached packages
 weekly.
 * `paccache` command: remove cached packages manually.
@@ -197,7 +204,7 @@ transaction.
 
 Install `archlinux-contrib` to get `checkservices` command. It runs `pacdiff`
 to merge `.pacnew` files then checks for processes running with outdated
-libraries and prompts the user if they want them to be restarted.
+mapped executable/library files and prompts the user if they want them to be restarted.
 
 Add `Server = https://archive.archlinux.org/packages/.all` to the end of
 enabled mirrors. This allows using Arch Linux Archive to get old packages
@@ -252,19 +259,14 @@ Install `android-tools` and `android-udev`.
 
 # Image viewer
 
-Install `gwenview`. Gwenview video playback also work if `phonon-qt5-vlc` is
-installed.
-
-# Hardware-accelerated video encodin/decoding
-
-Install `mesa-vdpau`. Add `VDPAU_DRIVER=radeonsi` to `/etc/enviroment`.
+Install `gwenview`. Install `ffmpegthumbs` to generate video thumbnails.
 
 ## Chromium
 
 Create `${XDG_CONFIG_HOME}/chromium-flags.conf` with the following content:
 
 ```
---enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL,AcceleratedVideoEncoder
+--enable-features=AcceleratedVideoEncoder
 ```
 
 # Power management
@@ -282,7 +284,7 @@ improve power consumption.
 
 # Vietnamese input method
 
-Install `fcitx5-unikey` and `fcitx5-im`. Add to `/etc/enviroment` the following
+Install `fcitx5-unikey` and `fcitx5-im`. Add to `/etc/environment` the following
 lines:
 
 ```
@@ -305,7 +307,7 @@ valid.
 
 Several ways to fix this:
 
-* Set `GTK_THEME` enviroment variable to use other theme (e.g. `Adwaita:dark`).
+* Set `GTK_THEME` environment variable to use other theme (e.g. `Adwaita:dark`).
 * Go to System Settings > Appearance > Application Style > Configure GNOME/GTK
 Application Style... and select other theme for GTK apps. To have Adwaita
 theme in the drop-down list you may have to install `gnome-themes-extra`.
