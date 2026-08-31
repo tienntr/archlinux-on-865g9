@@ -10,6 +10,29 @@ By default user will be lockout for 10 minutes after 3 failed login attempts
 in a 15 minute period. Edit `/etc/security/faillock.conf`, increase `deny`
 and decrease `unlock_time` if the default is too restrictive (it is, for me).
 
+# Fingerprint reader
+
+Install `fprintd`; the Synaptics `06cb:00f0` reader is supported by the
+repository version of `libfprint`.
+
+Enroll fingerprints through Plasma System Settings or with:
+
+```
+fprintd-enroll
+fprintd-verify
+```
+
+Plasma 6's lock screen supports fingerprint unlocking through the
+package-provided `/usr/lib/pam.d/kde-fingerprint`; do not create or modify
+`/etc/pam.d/kde` for ordinary lock-screen use.
+
+SDDM login remains password-based. This also allows `pam_kwallet5` to unlock
+KDE Wallet, which cannot be unlocked using only a fingerprint.
+
+Do not add `pam_fprintd.so` to `system-auth` merely for Plasma lock-screen
+support, because that enables fingerprint authentication for additional PAM
+consumers such as `sudo`.
+
 # Wayland-related issues
 
 ## Run apps in Wayland mode
